@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
 import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
+import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.projection.ResumoLancamento;
@@ -19,5 +20,7 @@ public interface LancamentoRepositoryQuery {
 	
 	public List<LancamentoEstatisticaCategoria> porCategoria(LocalDate mesReferencia);
 	public List<LancamentoEstatisticaDia> porDia(LocalDate mesReferencia);
+	
+	public List<LancamentoEstatisticaPessoa> porPessoa(LocalDate inicio, LocalDate fim); 
 
 }
