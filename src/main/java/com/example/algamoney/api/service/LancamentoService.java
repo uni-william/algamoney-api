@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
@@ -58,10 +58,12 @@ public class LancamentoService {
 	@Autowired
 	private Mailer mailer;
 	
-	@Value("${files.dir}")
-	private String localArquivos;
+	@Autowired
+	private ServletContext context;
+	
 	
 	public String uploadAnexo(MultipartFile anexo) throws IOException {
+		String localArquivos = context.getRealPath("/resources/arquivos/");
 		Path fileStorageLocation = Paths.get(localArquivos).toAbsolutePath().normalize();
 		if (!Files.exists(fileStorageLocation)) {
 			Files.createDirectories(fileStorageLocation);
