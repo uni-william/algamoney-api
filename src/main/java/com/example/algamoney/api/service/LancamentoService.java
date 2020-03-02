@@ -1,6 +1,11 @@
 package com.example.algamoney.api.service;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -12,8 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
 import com.example.algamoney.api.mail.Mailer;
@@ -49,6 +57,20 @@ public class LancamentoService {
 	
 	@Autowired
 	private Mailer mailer;
+	
+	@Value("${files.dir}")
+	private String localArquivos;
+	
+	public String uploadAnexo(MultipartFile anexo) throws IOException {
+		Path fileStorageLocation = Paths.get(localArquivos).toAbsolutePath().normalize();
+		if (!Files.exists(fileStorageLocation)) {
+			Files.createDirectories(fileStorageLocation);
+		}
+		String fileName = anexo.getOriginalFilename();
+        Path targetLocation = fileStorageLocation.resolve(fileName);
+        Files.copy(anexo.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);		
+		return targetLocation.toString();
+	}
 	
 	@Scheduled(cron = "0 0 6 * * *")
 	public void avisarSobreLancamentosVencidos() {
