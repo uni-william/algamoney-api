@@ -1,6 +1,5 @@
 package com.example.algamoney.api.resource;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;

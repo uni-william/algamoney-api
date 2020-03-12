@@ -62,6 +62,12 @@ public class PessoaResource {
 		Optional<Pessoa> optional = this.pessoaRepository.findById(codigo);
 		return optional.isPresent() ? ResponseEntity.ok(optional.get()) : ResponseEntity.notFound().build();
 	}
+	
+	@PostMapping("/existeNome")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	public ResponseEntity<?> buscarPeloNome(@RequestBody String nome) {
+		return nome != null ? ResponseEntity.ok(pessoaService.nomeJaExiste(nome)) : ResponseEntity.ok(false);
+	}	
 
 	@DeleteMapping("/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and #oauth2.hasScope('write')")

@@ -7,4 +7,5 @@ import com.example.algamoney.api.repository.pessoa.PessoaRepositoryQuery;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, Long>, PessoaRepositoryQuery {
 
+	Pessoa findByNomeIgnoreCase(String nome);
 }

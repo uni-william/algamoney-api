@@ -40,6 +40,11 @@ public class PessoaService {
 		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
 		return pessoaRepository.save(pessoa);
 	}
+	
+	public boolean nomeJaExiste(String nome) {
+		Pessoa pessoa = pessoaRepository.findByNomeIgnoreCase(nome);
+		return pessoa != null;
+	}
 
 	
 }
