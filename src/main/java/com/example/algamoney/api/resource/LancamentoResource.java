@@ -1,6 +1,5 @@
 package com.example.algamoney.api.resource;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -65,8 +64,8 @@ public class LancamentoResource {
 	
 	@PostMapping("/anexo")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
-	public String uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
-		return lancamentoService.uploadAnexo(anexo);
+	public void uploadAnexo(@RequestParam MultipartFile anexo) {
+		lancamentoService.uploadAnexo(anexo);
 	}
 
 	@GetMapping("/relatorio/por-pessoa")

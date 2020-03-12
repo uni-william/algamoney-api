@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -13,12 +12,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,20 +56,28 @@ public class LancamentoService {
 	@Autowired
 	private Mailer mailer;
 	
-	@Autowired
-	private ServletContext context;
+
+	@Value("${contato.disco.raiz}")
+	private String raiz;
+	
+	@Value("${contato.disco.diretorio-arquivos}")
+	private String diretorioArquivo;
 	
 	
-	public String uploadAnexo(MultipartFile anexo) throws IOException {
-		String localArquivos = context.getRealPath("/resources/arquivos/");
-		Path fileStorageLocation = Paths.get(localArquivos).toAbsolutePath().normalize();
-		if (!Files.exists(fileStorageLocation)) {
-			Files.createDirectories(fileStorageLocation);
+	public void uploadAnexo(MultipartFile anexo) {
+		this.salvarArquivo(this.diretorioArquivo, anexo);
+	}
+	
+	public void salvarArquivo(String diretorio, MultipartFile anexo) {
+		Path diretorioPath = Paths.get(this.raiz, diretorio);
+		Path arquivoPath = diretorioPath.resolve(anexo.getOriginalFilename());
+		
+		try {
+			Files.createDirectories(diretorioPath);
+			anexo.transferTo(arquivoPath.toFile());
+		} catch (IOException e) {
+			throw new RuntimeException("Problema ao gravar arquivo");
 		}
-		String fileName = anexo.getOriginalFilename();
-        Path targetLocation = fileStorageLocation.resolve(fileName);
-        Files.copy(anexo.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);		
-		return targetLocation.toString();
 	}
 	
 	@Scheduled(cron = "0 0 6 * * *")
