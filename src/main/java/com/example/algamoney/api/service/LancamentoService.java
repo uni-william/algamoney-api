@@ -64,17 +64,18 @@ public class LancamentoService {
 	private String diretorioArquivo;
 	
 	
-	public void uploadAnexo(MultipartFile anexo) {
-		this.salvarArquivo(this.diretorioArquivo, anexo);
+	public String uploadAnexo(MultipartFile anexo) {
+		return this.salvarArquivo(this.diretorioArquivo, anexo);
 	}
 	
-	public void salvarArquivo(String diretorio, MultipartFile anexo) {
+	public String salvarArquivo(String diretorio, MultipartFile anexo) {
 		Path diretorioPath = Paths.get(this.raiz, diretorio);
 		Path arquivoPath = diretorioPath.resolve(anexo.getOriginalFilename());
 		
 		try {
 			Files.createDirectories(diretorioPath);
 			anexo.transferTo(arquivoPath.toFile());
+			return anexo.getOriginalFilename();
 		} catch (IOException e) {
 			throw new RuntimeException("Problema ao gravar arquivo");
 		}

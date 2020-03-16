@@ -25,7 +25,7 @@ public class Lancamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-	
+
 	@NotNull
 	private String descricao;
 
@@ -38,11 +38,13 @@ public class Lancamento {
 
 	@NotNull
 	private BigDecimal valor;
-	
+
 	private String observacao;
 
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
+
+	private String anexo;
 
 	@NotNull
 	@ManyToOne
@@ -111,6 +113,14 @@ public class Lancamento {
 		this.tipo = tipo;
 	}
 
+	public String getAnexo() {
+		return anexo;
+	}
+
+	public void setAnexo(String anexo) {
+		this.anexo = anexo;
+	}
+
 	public Categoria getCategoria() {
 		return categoria;
 	}
@@ -126,7 +136,7 @@ public class Lancamento {
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
-	
+
 	@JsonIgnore
 	public boolean isReceita() {
 		return this.tipo.equals(TipoLancamento.RECEITA);

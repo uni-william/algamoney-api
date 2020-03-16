@@ -64,8 +64,8 @@ public class LancamentoResource {
 	
 	@PostMapping("/anexo")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
-	public void uploadAnexo(@RequestParam MultipartFile anexo) {
-		lancamentoService.uploadAnexo(anexo);
+	public ResponseEntity<String> uploadAnexo(@RequestParam MultipartFile anexo) {
+		return ResponseEntity.ok(lancamentoService.uploadAnexo(anexo));
 	}
 
 	@GetMapping("/relatorio/por-pessoa")
