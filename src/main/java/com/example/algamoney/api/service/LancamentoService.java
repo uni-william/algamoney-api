@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.algamoney.api.dto.ArquivoDto;
 import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
 import com.example.algamoney.api.mail.Mailer;
 import com.example.algamoney.api.model.Lancamento;
@@ -64,18 +65,20 @@ public class LancamentoService {
 	private String diretorioArquivo;
 	
 	
-	public String uploadAnexo(MultipartFile anexo) {
+	public ArquivoDto uploadAnexo(MultipartFile anexo) {
 		return this.salvarArquivo(this.diretorioArquivo, anexo);
 	}
 	
-	public String salvarArquivo(String diretorio, MultipartFile anexo) {
+	public ArquivoDto salvarArquivo(String diretorio, MultipartFile anexo) {
 		Path diretorioPath = Paths.get(this.raiz, diretorio);
 		Path arquivoPath = diretorioPath.resolve(anexo.getOriginalFilename());
 		
 		try {
 			Files.createDirectories(diretorioPath);
 			anexo.transferTo(arquivoPath.toFile());
-			return anexo.getOriginalFilename();
+			ArquivoDto arquivoDto = new ArquivoDto();
+			arquivoDto.setArquivo(anexo.getOriginalFilename());
+			return arquivoDto;
 		} catch (IOException e) {
 			throw new RuntimeException("Problema ao gravar arquivo");
 		}
